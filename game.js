@@ -1,5 +1,10 @@
-const openai = require('openai');
-
+import { Configuration, OpenAIApi } from "openai";
+const configuration = new Configuration({
+    organization: "org-NmYMuCJenUEUWMilXpVTqNcO",
+    apiKey: process.env['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'],
+});
+const openai = new OpenAIApi(configuration);
+const response = await openai.listEngines();
 openai.apiKey = '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';
 
 
@@ -14,26 +19,26 @@ class Monster {
     
     
     async generateDialogue() {
-      const prompt = `Generate dialogue for a monster named ${this.name}.`;
-      const response = await fetch('https://api.openai.com/v1/engines/text-davinci-002/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${openai.apiKey}`,
-        },
-        body: JSON.stringify({
-          prompt,
-          max_tokens: 1024,
-          n: 1,
-          stop: '\n',
-          temperature: 0.5,
-        }),
-      });
-      const result = await response.json();
-      const dialogue = result.choices[0].text.trim();
-      this.dialogue = dialogue;
-    }
-  
+        const prompt = `Generate dialogue for a monster named ${this.name}.`;
+        const response = await fetch('https://api.openai.com/v1/engines/text-davinci-002/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${'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'}`,
+          },
+          body: JSON.stringify({
+            prompt,
+            max_tokens: 1024,
+            n: 1,
+            stop: '\n',
+            temperature: 0.5,
+          }),
+        });
+        const result = await response.json();
+        const dialogue = result.choices[0].text.trim();
+        this.dialogue = dialogue;
+      }
+    
     // Rest of the Monster class implementation...
   }
   
