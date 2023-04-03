@@ -10,7 +10,7 @@
       const monsters = [];
       for (let i = 0; i < 49; i++) {
         const monster = new Monster(`Monster${i + 1}`, 100, [10, 20], 10);
-        await monster.generateDialogue();
+        await monster.generateDialogue(); // Call the method and wait for it to finish
         monsters.push(monster);
       }
 
@@ -20,6 +20,7 @@
         listItem.textContent = `${monster.name}: ${monster.dialogue}`;
         list.appendChild(listItem);
       }
+      
     });
   </script>
 </head>
