@@ -5,6 +5,11 @@ const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '/')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 app.post('/generate-monster-dialogue', async (req, res) => {
   const { monsterName } = req.body;
@@ -39,7 +44,6 @@ app.post('/generate-monster-dialogue', async (req, res) => {
     res.status(500).send('Error generating text');
   }
 });
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
