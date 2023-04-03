@@ -3,11 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/openai@3.2.1/dist/index.min.js"></script>
-  <title>Generative Adventure</title>
+  <title>Monster Talk Test</title>
+  <script defer src="game.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', async () => {
+      const monsters = [];
+      for (let i = 0; i < 49; i++) {
+        const monster = new Monster(`Monster${i + 1}`, 100, [10, 20], 10);
+        await monster.generateDialogue();
+        monsters.push(monster);
+      }
+
+      const list = document.getElementById('monster-talk-list');
+      for (const monster of monsters) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${monster.name}: ${monster.dialogue}`;
+        list.appendChild(listItem);
+      }
+    });
+  </script>
 </head>
 <body>
-  <script src="game.js"></script>
+  <h1>Monster Talk Test</h1>
+  <ul id="monster-talk-list"></ul>
 </body>
 </html>
