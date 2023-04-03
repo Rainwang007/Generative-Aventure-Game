@@ -1,11 +1,11 @@
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-
+const path = require('path');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static('public'));
+
 app.post('/generate-monster-dialogue', async (req, res) => {
   const { monsterName } = req.body;
   const prompt = `Generate dialogue for a monster named ${monsterName}.`;
