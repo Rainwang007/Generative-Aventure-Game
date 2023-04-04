@@ -17,7 +17,7 @@ app.post('/api/openai', async (req, res) => {
   const maxTokens = req.body.maxTokens;
 
   try {
-    const response = await OpenAI.Completion.create({
+    const response = await openai.Completion.create({
       engine: "text-davinci-003",
       prompt: prompt,
       max_tokens: maxTokens,
