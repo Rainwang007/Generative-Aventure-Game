@@ -3,13 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monster Game</title>
+  <title>Adventure Game</title>
+  <style>
+  </style>
 </head>
 <body>
-  <div id="monster-dialogue"></div>
-  <button id="talk-button">Make Monster Talk</button>
+  <h1>Adventure Game</h1>
+  <div id="start-game-container">
+    <label for="player-name-input">Enter your name:</label>
+    <input type="text" id="player-name-input">
+    <button id="start-game-button">Start Game</button>
+  </div>
+  <div id="stats-box"></div>
+  <div id="game-message"></div>
+  <div id="place-buttons-container"></div>
+  <div>
+    <button id="talk-button">Talk to Monster</button>
+    <p id="monster-dialogue"></p>
+  </div>
+  <div>
+    <button id="npc-talk-button">Talk to NPC</button>
+    <p id="npc-dialogue"></p>
+  </div>
   <script src="game.js"></script>
+  <script>
+    // Add an event listener for the start game button
+    document.getElementById("start-game-button").addEventListener("click", startGame);
+  </script>
 </body>
 </html>
-
-

@@ -35,7 +35,33 @@ app.post('/api/openai', async (req, res) => {
       ],
     });
 
-    const chatMessage = completion.data.choices[0].message.content;
+    const chatMessage = completion.data.choices[0].text.content.trim();
+    res.send(chatMessage);
+  } catch (error) {
+    console.error('Error:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error generating text');
+  }
+});
+app.post('/api/openai-npc', async (req, res) => {
+  const { npcName, monsterName } = req.body;
+  const prompt = `Generate dialogue for an NPC named ${npcName} who talks about a monster named ${monsterName}.`;
+
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that generates dialogue for NPCs.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+
+    const chatMessage = completion.data.choices[0].text.content.trim();
     res.send(chatMessage);
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
