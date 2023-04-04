@@ -10,19 +10,20 @@ class Monster {
     
     async generateDialogue(maxTokens = 500) {
       try {
-        const response = await fetch('/generate-monster-dialogue', {
+        const response = await fetch('/api/openai', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ monsterName: this.name, maxTokens }),
+          body: JSON.stringify({ prompt: `A monster named ${this.name} says something`, maxTokens }),
         });
-        const dialogue = await response.text();
-        this.dialogue = dialogue;
+        const dialogue = await response.json();
+        this.dialogue = dialogue.generated_text;
       } catch (error) {
         console.error('Error:', error);
       }
     }
+    
   }
 
   const talkButton = document.getElementById('talk-button');

@@ -12,14 +12,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/generate-monster-dialogue', async (req, res) => {
-  const monsterName = req.body.monsterName;
+app.post('/api/openai', async (req, res) => {
+  const prompt = req.body.prompt;
   const maxTokens = req.body.maxTokens;
 
   try {
     const response = await openai.Completion.create({
       engine: "text-davinci-003",
-      prompt: `A monster named ${monsterName} says something`,
+      prompt: prompt,
       max_tokens: maxTokens,
       n: 1,
       stop: null,
@@ -31,7 +31,6 @@ app.post('/generate-monster-dialogue', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
