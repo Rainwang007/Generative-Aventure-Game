@@ -15,10 +15,10 @@ class Monster {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ prompt: `A monster named ${this.name} says something` }),
+          body: JSON.stringify({ monsterName: this.name }),
         });
-        const dialogue = await response.json();
-        this.dialogue = dialogue.generated_text;
+        const dialogue = await response.text();
+        this.dialogue = dialogue;
       } catch (error) {
         console.error('Error:', error);
       }
