@@ -23,7 +23,7 @@ app.post('/api/openai', async (req, res) => {
   const prompt = `Generate dialogue for a monster named ${monsterName}.`;
   try {
     const completion = await openai.createCompletion({
-      model: "text-davinci-003",
+      model: "gpt-3.5-turbo-0301",
       prompt: prompt, // Replace "Hello world" with prompt
     });
     res.send(completion.data.choices[0].message.text); // Replace response with completion
