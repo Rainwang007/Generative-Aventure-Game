@@ -3,32 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adventure Game</title>
-  <style>
-  </style>
+  <title>Generative Adventure</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Adventure Game</h1>
+  <h1>Generative Adventure</h1>
+  <div id="initial-text">
+    <p>Deep forests, steep mountains, mysterious ruins... in this vast world, every corner hides countless treasures and dangers. For brave adventurers, these unknown territories are full of temptations and challenges.</p>
+    <p>Our protagonist, a young adventurer, is such a brave explorer. They have always dreamed of embarking on a grand adventure, exploring uncharted territories, and discovering treasures beyond their wildest dreams. And finally, the day has come for them to set out on their journey.</p>
+  </div>
   <div id="start-game-container">
     <label for="player-name-input">Enter your name:</label>
     <input type="text" id="player-name-input">
     <button id="start-game-button">Start Game</button>
   </div>
-  <div id="stats-box"></div>
-  <div id="game-message"></div>
+  <div id="stats-box" style="display: none;">
+    <div>Name: <span id="player-name"></span></div>
+    <div>HP: <span id="player-hp">1000</span></div>
+    <div>Weapon: <span id="player-weapon" title="Fist">Fist</span></div>
+    <div>Gold: <span id="player-gold">0</span></div>
+  </div>
   <div id="place-buttons-container"></div>
-  <div>
-    <button id="talk-button">Talk to Monster</button>
-    <p id="monster-dialogue"></p>
-  </div>
-  <div>
-    <button id="npc-talk-button">Talk to NPC</button>
-    <p id="npc-dialogue"></p>
-  </div>
   <script src="game.js"></script>
-  <script>
-    // Add an event listener for the start game button
-    document.getElementById("start-game-button").addEventListener("click", startGame);
-  </script>
 </body>
 </html>

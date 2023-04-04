@@ -227,32 +227,64 @@ class Player {
   }
   
  
-      
+  // ...
+
 function startGame() {
-    // Clear any existing game data and set up the initial game state
-    clearGame();
-    const playerName = document.getElementById("player-name-input").value;
-    const player = new Player(playerName);
-    const statsBox = document.getElementById("stats-box");
-    statsBox.innerHTML = `
-      <div>Name: ${player.name}</div>
-      <div>HP: ${player.hp}</div>
-      <div>Weapon: ${player.weapon.name}</div>
-      <div>Gold: ${player.gold}</div>
-    `;
-  
-    // Print the initial game message
-    printMessage(`
-      Deep forests, steep mountains, mysterious ruins... in this vast world, every corner hides countless treasures and dangers. For brave adventurers, these unknown territories are full of temptations and challenges.
-  
-      Our protagonist, a young adventurer, is such a brave explorer. They have always dreamed of embarking on a grand adventure, exploring uncharted territories, and discovering treasures beyond their wildest dreams. And finally, the day has come for them to set out on their journey.
-    `);
-  
-    // Show the list of available places for the player to visit
-    const placeButtonsContainer = document.getElementById("place-buttons-container");
+  // Save the player's name
+  const playerName = document.getElementById("player-name-input").value;
+  const player = new Player(playerName);
+
+  // Make the stats box appear and update its content
+  const statsBox = document.getElementById("stats-box");
+  document.getElementById("player-name").innerText = player.name;
+  document.getElementById("player-hp").innerText = player.hp;
+  document.getElementById("player-weapon").innerText = player.weapon.name;
+  document.getElementById("player-weapon").title = player.weapon.description;
+  document.getElementById("player-gold").innerText = player.gold;
+  statsBox.style.display = "block";
+
+  // Clear the initial text
+  document.getElementById("initial-text").style.display = "none";
+  document.getElementById("start-game-container").style.display = "none";
+
+  // Generate 5 random places
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+  placeButtonsContainer.innerHTML = "";
+  for (let i = 0; i < 5; i++) {
+    const placeIndex = Math.floor(Math.random() * places.length);
+    const place = places[placeIndex];
+    const button = document.createElement("button");
+    button.classList.add("place-button");
+    button.innerText = place.description;
+    button.addEventListener("click", () => {
+      visitPlace(player, place);
+    });
+    placeButtonsContainer.appendChild(button);
+  }
+}
+
+// ...
+
+function visitPlace(player, place) {
+  // Store either a NPC or a monster in each place
+  if (Math.random() > 0.5) {
+    place.monster = generateRandomMonster();
+  } else {
+    place.npc = generateRandomNPC();
+  }
+
+  // ...
+  // Code for the place exploration, monster fighting, or NPC interaction
+
+  // When player defeats the monster or clicks "exit" button in NPC place
+  const exitButton = document.createElement("button");
+  exitButton.innerText = "Exit";
+  exitButton.addEventListener("click", () => {
+    // Clear the exploration content and display 5 new random places
     placeButtonsContainer.innerHTML = "";
-    for (let i = 0; i < places.length; i++) {
-      const place = places[i];
+    for (let i = 0; i < 5; i++) {
+      const placeIndex = Math.floor(Math.random() * places.length);
+      const place = places[placeIndex];
       const button = document.createElement("button");
       button.classList.add("place-button");
       button.innerText = place.description;
@@ -261,6 +293,14 @@ function startGame() {
       });
       placeButtonsContainer.appendChild(button);
     }
-  }
+  });
+  placeButtonsContainer.appendChild(exitButton);
+}
+
+// Add generateRandomMonster() and generateRandomNPC() functions to randomly create monsters and NPCs
+// ...
+
+document.getElementById("start-game-button").addEventListener("click", startGame);
+
 
   
