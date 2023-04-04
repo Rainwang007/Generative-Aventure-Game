@@ -1,3 +1,6 @@
+require("axios")
+require("form-data")
+require("typescript")
 const express = require("express");
 const { Configuration, OpenAIApi } = require("openai");
 const bodyParser = require("body-parser");
@@ -20,7 +23,7 @@ app.post("/api/openai", async (req, res) => {
 
     const response = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: prompt,
+      prompt: prompt
     });
 
     res.send({ generated_text: response.data.choices[0].text.trim() });
