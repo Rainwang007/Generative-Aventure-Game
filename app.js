@@ -3,7 +3,7 @@ const openai = require('openai');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const path = require('path');
-
+openai.apiKey = process.env.OPENAI_API_KEY;
 const app = express();
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
