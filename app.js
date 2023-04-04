@@ -27,10 +27,11 @@ app.post('/api/openai', async (req, res) => {
     });
     res.send({ generated_text: response.choices[0].text.trim() });
   } catch (error) {
-    console.error(error);
+    console.error('Error in /api/openai route:', error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 
 const port = process.env.PORT || 3000;
