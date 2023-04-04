@@ -1,4 +1,5 @@
 const express = require('express');
+const openai = require('openai');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -16,13 +17,21 @@ app.post('/generate-monster-dialogue', async (req, res) => {
   const maxTokens = req.body.maxTokens;
 
   try {
-    const response = await openai.generate(`A monster named ${monsterName} says something`, maxTokens);
+    const response = await openai.Completion.create({
+      engine: "text-davinci-003",
+      prompt: `A monster named ${monsterName} says something`,
+      max_tokens: maxTokens,
+      n: 1,
+      stop: null,
+      temperature: 1,
+    });
     res.send({ generated_text: response.choices[0].text.trim() });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
