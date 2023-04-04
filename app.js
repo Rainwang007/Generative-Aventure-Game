@@ -22,14 +22,14 @@ app.post('/generate-monster-dialogue', async (req, res) => {
         messages: [
           {
             role: "system",
-            content: "You play the role of hostile monster"
+            content: "You play the hostile monster that responds and challenges the player"
           },
           {
             role: "user",
             content: prompt
           }
         ],
-        max_tokens: 50,
+        max_tokens: 2000,
       },
       {
         headers: {
