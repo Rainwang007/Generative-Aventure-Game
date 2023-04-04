@@ -18,7 +18,7 @@ app.post('/api/openai', async (req, res) => {
 
   try {
     const response = await openai.Completion.create({
-      engine: "text-davinci-003",
+      engine: "gpt-3-turbo",
       prompt: prompt,
       max_tokens: maxTokens,
       n: 1,
