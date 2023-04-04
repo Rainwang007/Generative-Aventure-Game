@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/openai', async (req, res) => {
+  console.log('openai object:', openai);
   const prompt = req.body.prompt;
   const maxTokens = req.body.maxTokens;
 
@@ -31,8 +32,6 @@ app.post('/api/openai', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
