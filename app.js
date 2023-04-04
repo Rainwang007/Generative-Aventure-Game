@@ -22,7 +22,7 @@ app.post('/api/openai', async (req, res) => {
 
   try {
     const completion = await openai.createChatCompletion({
-      model: "text-davinci-003",
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
