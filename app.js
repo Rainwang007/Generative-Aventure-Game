@@ -17,7 +17,7 @@ app.post('/api/openai', async (req, res) => {
   const maxTokens = req.body.maxTokens;
 
   try {
-    const response = await openai.Completion.create({
+    const response = await OpenAI.Completion.create({
       engine: "text-davinci-003",
       prompt: prompt,
       max_tokens: maxTokens,
@@ -31,6 +31,7 @@ app.post('/api/openai', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
