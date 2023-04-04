@@ -16,22 +16,33 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-
-
 app.post('/api/openai', async (req, res) => {
   const { monsterName } = req.body;
   const prompt = `Generate dialogue for a monster named ${monsterName}.`;
+
   try {
-    const completion = await openai.createCompletion({
-      model: "gpt-3.5-turbo-0301",
-      prompt: prompt, // Replace "Hello world" with prompt
+    const completion = await openai.createChatCompletion({
+      model: "text-davinci-003",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that generates dialogue for monsters.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
     });
-    res.send(completion.data.choices[0].message.text); // Replace response with completion
+
+    const chatMessage = completion.data.choices[0].message.content;
+    res.send(chatMessage);
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
     res.status(500).send('Error generating text');
   }
 });
+
 
 
 
