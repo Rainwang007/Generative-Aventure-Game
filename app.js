@@ -1,37 +1,39 @@
-const express = require('express');
-const openai = require('openai');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const path = require('path');
-openai.apiKey = process.env.OPENAI_API_KEY;
+const express = require("express");
+const { Configuration, OpenAIApi } = require("openai");
+const bodyParser = require("body-parser");
+
 const app = express();
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '/')));
+const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
 });
+const openai = new OpenAIApi(configuration);
 
-app.post('/api/openai', async (req, res) => {
-  console.log('openai object:', openai);
-  const prompt = req.body.prompt;
-  const maxTokens = req.body.maxTokens;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
+app.post("/api/openai", async (req, res) => {
   try {
-    const response = await openai.Completion.create({
-      engine: "gpt-3-turbo",
+    const prompt = req.body.prompt;
+    const maxTokens = req.body.max_tokens;
+
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
       prompt: prompt,
       max_tokens: maxTokens,
       n: 1,
       stop: null,
       temperature: 1,
     });
-    res.send({ generated_text: response.choices[0].text.trim() });
+
+    res.send({ generated_text: response.data.choices[0].text.trim() });
   } catch (error) {
-    console.error('Error in /api/openai route:', error);
-    res.status(500).send({ error: error.message });
+    console.error(`Error in /api/openai route: ${error}`);
+    res.status(500).send({ error: "An error occurred while processing your request." });
   }
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
+});
