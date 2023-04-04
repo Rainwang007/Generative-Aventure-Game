@@ -1,38 +1,38 @@
-require("axios")
-require("form-data")
-require("typescript")
-const express = require("express");
+const express = require('express');
+const axios = require('axios');
+const bodyParser = require('body-parser');
+const path = require('path');
 const { Configuration, OpenAIApi } = require("openai");
-const bodyParser = require("body-parser");
-
-const app = express();
-const port = process.env.PORT||3000;
-
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-app.use(bodyParser.urlencoded({ extended: false }));
+const app = express();
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '/')));
 
-app.post("/api/openai", async (req, res) => {
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
+
+app.post('/api/openai', async (req, res) => {
+  const { monsterName } = req.body;
+  const prompt = `Generate dialogue for a monster named ${monsterName}.`;
   try {
-    const prompt = req.body.prompt;
-    const maxTokens = req.body.max_tokens;
-
-    const response = await openai.createCompletion({
+    const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: prompt
+      prompt: "Hello world",
     });
-
-    res.send({ generated_text: response.data.choices[0].text.trim() });
+    res.send(response.data.choices[0].message.text);
   } catch (error) {
-    if (error.response) {
-      console.log(error.response.status);
-      console.log(error.response.data);
-    } else {
-      console.log(error.message);
-    }
+    console.error('Error:', error.response ? error.response.data : error.message);
+    res.status(500).send('Error generating text');
   }
 });
+
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Listening on port ${port}`));
