@@ -8,14 +8,14 @@ class Monster {
     }
     
     
-    async generateDialogue(maxTokens = 500) {
+    async generateDialogue() {
       try {
         const response = await fetch('/api/openai', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ prompt: `A monster named ${this.name} says something`, maxTokens }),
+          body: JSON.stringify({ prompt: `A monster named ${this.name} says something` }),
         });
         const dialogue = await response.json();
         this.dialogue = dialogue.generated_text;
