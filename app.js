@@ -24,14 +24,15 @@ app.post('/api/openai', async (req, res) => {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: "Hello world",
+      prompt: prompt, // Replace "Hello world" with prompt
     });
-    res.send(response.data.choices[0].message.text);
+    res.send(completion.data.choices[0].message.text); // Replace response with completion
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
     res.status(500).send('Error generating text');
   }
 });
+
 
 
 const port = process.env.PORT || 3000;
