@@ -8,7 +8,7 @@ class Player {
 
   // Rest of the Player class implementation...
 }
-
+let player;
 class Place {
   constructor(description) {
     this.description = description;
@@ -248,31 +248,6 @@ function generatePlacesButtons() {
 }
 // Place visits
 
-function distributeEntities() {
-  // Create a temporary array containing indices of all places
-  const availablePlaces = Array.from({ length: places.length }, (_, i) => i);
-
-  // Shuffle the available places array
-  availablePlaces.sort(() => Math.random() - 0.5);
-
-  // Assign each monster to a place
-  monsters.forEach((monster, index) => {
-    places[availablePlaces[index]].monster = monster;
-  });
-
-  // Assign each NPC to a place
-  NPCs.forEach((npc, index) => {
-    places[availablePlaces[index + monsters.length]].npc = npc;
-  });
-
-  // Assign each weapon to a place
-  weapons.forEach((weapon, index) => {
-    places[availablePlaces[index + monsters.length + NPCs.length]].weapon = weapon;
-  });
-}
-// Distribute to places
-// Call the distributeEntities function after defining the arrays
-distributeEntities();
 
 
 function startGame() {
@@ -283,11 +258,11 @@ function startGame() {
 
   // Create a new player and update the stats box
   const playerName = playerNameInput.value;
-  const player = new Player(playerName);
-  const statsBox = document.getElementById("stats-box");
+  player = new Player(playerName); // Assign the player variable
+    const statsBox = document.getElementById("stats-box");
   statsBox.innerHTML = `
-    <div>Name: ${player.name}</div>
-    <div>HP: ${player.hp}</div>
+  <div>Name: ${player.name}</div>
+    <div id="player-hp">HP: ${player.hp}</div>
     <div>Weapon: <span id="player-weapon" title="${player.weapon.backgroundStory}">${player.weapon.name}</span></div>
     <div>Gold: ${player.gold}</div>
   `;
@@ -312,17 +287,23 @@ function startGame() {
 }
 // Start game
   
-function visitPlace(selectedPlace) {
-  // Remove the selected place from the places array
-  places = places.filter((place) => place !== selectedPlace);
-
-  // Display the selected place
+function visitPlace(place) {
+  // Clear out the place visit boxes
   const placeButtonsContainer = document.getElementById("place-buttons-container");
-  placeButtonsContainer.innerHTML = `
-    <div class="selected-place">
-      <p>${selectedPlace.description}</p>
-    </div>
-  `;
+  placeButtonsContainer.innerHTML = "";
+
+  // Display the place description and the name of the stored NPC or monster
+  const entity = place.monster ? place.monster : place.npc;
+  const entityType = place.monster ? "monster" : "NPC";
+  const placeDescription = document.createElement("p");
+  placeDescription.innerText = `${place.description} Here you meet ${entityType}: ${entity.name}`;
+  placeButtonsContainer.appendChild(placeDescription);
+  if (entityType === "monster") {
+    meetMonster(place);
+  } else {
+    // If the entityType is an NPC, call meetNPC function
+    meetNPC(place);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -340,4 +321,139 @@ startJourneyButton.addEventListener("click", () => {
   // Generate place buttons
   generatePlacesButtons();
 });
-  
+
+function distributeEntities() {
+  // Create a temporary array containing indices of all places
+  const availablePlaces = Array.from({ length: places.length }, (_, i) => i);
+
+  // Shuffle the available places array
+  availablePlaces.sort(() => Math.random() - 0.5);
+
+  // Assign each monster to a place
+  monsters.forEach((monster, index) => {
+    const placeIndex = availablePlaces[index];
+    if (places[placeIndex]) {
+      places[placeIndex].monster = monster;
+    }
+  });
+
+  // Assign each NPC to a place
+  NPCs.forEach((npc, index) => {
+    const placeIndex = availablePlaces[index + monsters.length];
+    if (places[placeIndex]) {
+      places[placeIndex].npc = npc;
+    }
+  });
+
+  // Assign each weapon to a place
+  weapons.forEach((weapon, index) => {
+    const placeIndex = availablePlaces[index + monsters.length + NPCs.length];
+    if (places[placeIndex]) {
+      places[placeIndex].weapon = weapon;
+    }
+  });
+}
+
+
+// Call the distributeEntities function after defining the arrays
+distributeEntities();
+
+function meetNPC(place) {
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+
+  // Display the NPC's dialogue
+  const npcDialogue = document.createElement("p");
+  npcDialogue.innerText = `NPC Dialogue: ${place.npc.dialogue}`;
+  placeButtonsContainer.appendChild(npcDialogue);
+
+  // Display the input box and "Chat" button
+  const chatInput = document.createElement("input");
+  chatInput.type = "text";
+  chatInput.placeholder = "Type your message here...";
+  placeButtonsContainer.appendChild(chatInput);
+
+  const chatButton = document.createElement("button");
+  chatButton.innerText = "Chat";
+  chatButton.addEventListener("click", () => {
+    // Add the logic for chatting with the NPC here
+  });
+  placeButtonsContainer.appendChild(chatButton);
+
+  // Display the "Leave" button
+  const leaveButton = document.createElement("button");
+  leaveButton.innerText = "Leave";
+  leaveButton.addEventListener("click", () => {
+    // Add the logic for leaving the NPC place here
+  });
+  placeButtonsContainer.appendChild(leaveButton);
+}
+
+
+
+
+
+
+function meetMonster(place) {
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+
+  // Display the monster's dialogue and HP
+  const monsterDialogue = document.createElement("p");
+  monsterDialogue.innerText = `Monster Dialogue: ${place.monster.dialogue}`;
+  placeButtonsContainer.appendChild(monsterDialogue);
+
+  const monsterHP = document.createElement("p");
+  monsterHP.innerText = `Monster HP: ${place.monster.hp}`;
+  placeButtonsContainer.appendChild(monsterHP);
+
+  // Display the "Attack" button
+  const attackButton = document.createElement("button");
+  attackButton.innerText = "Attack";
+  attackButton.addEventListener("click", () => {
+    fight(player, place);
+  });
+  placeButtonsContainer.appendChild(attackButton);
+
+  // Create the fight info container
+  const fightInfoContainer = document.createElement("div");
+  fightInfoContainer.setAttribute("id", "fight-info-container");
+  placeButtonsContainer.appendChild(fightInfoContainer);
+
+
+
+async function fight(player, place) {
+  let attacker = player;
+  let defender = place.monster;
+
+  while (player.hp > 0 && place.monster.hp > 0) {
+    const attackPointsRange = attacker === player ? attacker.weapon.attackPointRange : attacker.attackPointRange;
+const minAttackPoints = attackPointsRange[0];
+const maxAttackPoints = attackPointsRange[1];
+const attackPoints = Math.floor(Math.random() * (maxAttackPoints - minAttackPoints + 1) + minAttackPoints);
+defender.hp -= attackPoints;
+
+    // Display damage dealt and remaining HP
+    const damageInfo = `${attacker === player ? "Player" : "Monster"} dealt ${attackPoints} damage.`;
+    const remainingHP = attacker === player ? `Player's remaining HP: ${player.hp}` : "";
+    const fightInfoText = document.createTextNode(damageInfo + " " + remainingHP);
+    fightInfoContainer.appendChild(fightInfoText);
+    fightInfoContainer.appendChild(document.createElement("br"));
+
+    // Swap attacker and defender
+    [attacker, defender] = [defender, attacker];
+
+    // Add a delay between each turn
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+
+  // Display the fight outcome
+  if (player.hp <= 0) {
+    fightInfoContainer.appendChild(document.createTextNode("Player has been defeated."));
+  } else {
+    fightInfoContainer.appendChild(document.createTextNode("Monster has been defeated."));
+  }
+
+  // Update player's remaining HP in the stats box
+  const playerHP = document.getElementById("player-hp");
+  playerHP.innerText = player.hp;
+}
+}
