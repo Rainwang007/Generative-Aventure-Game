@@ -9,6 +9,15 @@ class Player {
   // Rest of the Player class implementation...
 }
 
+class Place {
+  constructor(description) {
+    this.description = description;
+    this.monster = null;
+    this.npc = null;
+    this.weapon = null;
+  }
+}
+
 class Weapon {
   constructor(name, backgroundStory, attackPointRange) {
     this.name = name;
@@ -162,14 +171,7 @@ class NPC {
     new NPC("Drogath", "Drogath is an orc warlord who seeks to expand his territory. He offers a bounty for the heads of the leaders of neighboring kingdoms.", 1500)
   ];
 
-  class Place {
-    constructor(description) {
-      this.description = description;
-      this.monster = null;
-      this.npc = null;
-      this.weapon = null;
-    }
-  }
+
   
   const places = [
     new Place("You find yourself in a dense forest, surrounded by towering trees and tangled underbrush."),
@@ -245,6 +247,33 @@ function generatePlacesButtons() {
   });
 }
 // Place visits
+
+function distributeEntities() {
+  // Create a temporary array containing indices of all places
+  const availablePlaces = Array.from({ length: places.length }, (_, i) => i);
+
+  // Shuffle the available places array
+  availablePlaces.sort(() => Math.random() - 0.5);
+
+  // Assign each monster to a place
+  monsters.forEach((monster, index) => {
+    places[availablePlaces[index]].monster = monster;
+  });
+
+  // Assign each NPC to a place
+  NPCs.forEach((npc, index) => {
+    places[availablePlaces[index + monsters.length]].npc = npc;
+  });
+
+  // Assign each weapon to a place
+  weapons.forEach((weapon, index) => {
+    places[availablePlaces[index + monsters.length + NPCs.length]].weapon = weapon;
+  });
+}
+// Distribute to places
+// Call the distributeEntities function after defining the arrays
+distributeEntities();
+
 
 function startGame() {
   // Clear initial-text and input box
