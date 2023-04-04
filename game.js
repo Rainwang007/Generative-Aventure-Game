@@ -224,6 +224,28 @@ class NPC {
     new Place("A dense and tangled thicket of bushes and brambles blocks your way. It looks like it would take some serious effort to push your way through."),
 ]
 
+
+function generatePlacesButtons() {
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+  placeButtonsContainer.innerHTML = "";
+
+  const uniquePlaces = new Set();
+  while (uniquePlaces.size < 5) {
+    uniquePlaces.add(places[Math.floor(Math.random() * places.length)]);
+  }
+
+  uniquePlaces.forEach((place) => {
+    const button = document.createElement("button");
+    button.classList.add("place-button");
+    button.innerText = place.description;
+    button.addEventListener("click", () => {
+      visitPlace(place);
+    });
+    placeButtonsContainer.appendChild(button);
+  });
+}
+// Place visits
+
 function startGame() {
   // Clear initial-text and input box
   const initialText = document.getElementById("initial-text");
@@ -254,13 +276,39 @@ function startGame() {
 
   // Clear the player name input value
   playerNameInput.value = "";
+
+   // Show the Start Journey button
+   const startJourneyContainer = document.getElementById("start-journey-container");
+   startJourneyContainer.classList.remove("hidden");
+}
+// Start game
+  
+function visitPlace(selectedPlace) {
+  // Remove the selected place from the places array
+  places = places.filter((place) => place !== selectedPlace);
+
+  // Display the selected place
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+  placeButtonsContainer.innerHTML = `
+    <div class="selected-place">
+      <p>${selectedPlace.description}</p>
+    </div>
+  `;
 }
 
-  
 document.addEventListener("DOMContentLoaded", () => {
   const startGameButton = document.getElementById("start-game-button");
   startGameButton.addEventListener("click", startGame);
 });
+// Click start game
+// Add an event listener to the Start Journey button
+const startJourneyButton = document.getElementById("start-journey-button");
+startJourneyButton.addEventListener("click", () => {
+  // Hide the Start Journey button
+  const startJourneyContainer = document.getElementById("start-journey-container");
+  startJourneyContainer.classList.add("hidden");
 
-
+  // Generate place buttons
+  generatePlacesButtons();
+});
   
