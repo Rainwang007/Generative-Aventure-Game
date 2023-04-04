@@ -12,36 +12,15 @@ app.get('/', (req, res) => {
 });
 
 app.post('/generate-monster-dialogue', async (req, res) => {
-  const { monsterName } = req.body;
-  const prompt = `Generate dialogue for a monster named ${monsterName}.`;
+  const monsterName = req.body.monsterName;
+  const maxTokens = req.body.maxTokens;
+
   try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: "You play the hostile monster that responds and challenges the player"
-          },
-          {
-            role: "user",
-            content: prompt
-          }
-        ],
-        max_tokens: 2000,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-      }
-    );
-    res.send(response.data.choices[0].message.content.trim());
+    const response = await openai.generate(`A monster named ${monsterName} says something`, maxTokens);
+    res.send({ generated_text: response.choices[0].text.trim() });
   } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-    res.status(500).send('Error generating text');
+    console.error(error);
+    res.status(500).send({ error: error.message });
   }
 });
 

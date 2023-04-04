@@ -3,31 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monster Talk Test</title>
-  <script defer src="game.js"></script>
-  <script>
-    window.addEventListener('DOMContentLoaded', async () => {
-      const monsters = [
-    new Monster("Arktikus", 53, [13, 21], 37),
-    new Monster("Brimstone", 89, [7, 19], 18),
-    new Monster("Cataclysm", 61, [4, 14], 31),
-    new Monster("Deimos", 76, [9, 19], 27),
-    new Monster("Echidna", 42, [11, 23], 42),
-    new Monster("Fafnir", 94, [5, 15], 10),
-    new Monster("Gorgon", 71, [10, 20], 25)]
-
-      const list = document.getElementById('monster-talk-list');
-      for (const monster of monsters) {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${monster.name}: ${monster.dialogue}`;
-        list.appendChild(listItem);
-      }
-      
-    });
-  </script>
+  <title>Monster Game</title>
 </head>
 <body>
-  <h1>Monster Talk Test</h1>
-  <ul id="monster-talk-list"></ul>
+  <div id="monster-dialogue"></div>
+  <button id="talk-button">Make Monster Talk</button>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="game.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

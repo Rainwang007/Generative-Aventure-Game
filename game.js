@@ -8,14 +8,14 @@ class Monster {
     }
     
     
-    async generateDialogue() {
+    async generateDialogue(maxTokens = 500) {
       try {
         const response = await fetch('/generate-monster-dialogue', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ monsterName: this.name }),
+          body: JSON.stringify({ monsterName: this.name, maxTokens }),
         });
         const dialogue = await response.text();
         this.dialogue = dialogue;
@@ -23,10 +23,17 @@ class Monster {
         console.error('Error:', error);
       }
     }
-  
-    
-
   }
+
+  const talkButton = document.getElementById('talk-button');
+const monsterDialogue = document.getElementById('monster-dialogue');
+
+talkButton.addEventListener('click', async () => {
+  const randomMonster = monsters[Math.floor(Math.random() * monsters.length)];
+  const dialogue = await randomMonster.talk();
+  monsterDialogue.innerText = `${randomMonster.name}: ${dialogue}`;
+});
+
   
   const monsters = [
     new Monster("Arktikus", 53, [13, 21], 37),
