@@ -30,7 +30,7 @@ const monsterDialogue = document.getElementById('monster-dialogue');
 
 talkButton.addEventListener('click', async () => {
   const randomMonster = monsters[Math.floor(Math.random() * monsters.length)];
-  const dialogue = await randomMonster.talk();
+  const dialogue = await randomMonster.generateDialogue();
   monsterDialogue.innerText = `${randomMonster.name}: ${dialogue}`;
 });
 
