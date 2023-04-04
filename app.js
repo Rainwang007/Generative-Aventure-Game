@@ -35,7 +35,7 @@ app.post('/api/openai', async (req, res) => {
       ],
     });
 
-    const chatMessage = completion.data.choices[0].text.content.trim();
+    const chatMessage = completion.data.choices[0].message.content.trim();
     res.send(chatMessage);
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
@@ -61,7 +61,7 @@ app.post('/api/openai-npc', async (req, res) => {
       ],
     });
 
-    const chatMessage = completion.data.choices[0].text.content.trim();
+    const chatMessage = completion.data.choices[0].message.content.trim();
     res.send(chatMessage);
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
