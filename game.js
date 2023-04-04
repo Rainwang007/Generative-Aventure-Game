@@ -1,3 +1,22 @@
+class Player {
+  constructor(name) {
+    this.name = name;
+    this.hp = 1000;
+    this.gold = 0;
+    this.weapon = new Weapon("Fist", "Your own two hands.", [5, 8]);
+  }
+
+  // Rest of the Player class implementation...
+}
+
+class Weapon {
+  constructor(name, backgroundStory, attackPointRange) {
+    this.name = name;
+    this.backgroundStory = backgroundStory;
+    this.attackPointRange = attackPointRange;
+  }
+}
+
 class Monster {
     constructor(name, hp, attackPointRange, goldDrop) {
       this.name = name;
@@ -8,32 +27,59 @@ class Monster {
     }
     
     
-    async generateDialogue() {
-      try {
-        const response = await fetch('/api/openai', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ monsterName: this.name }),
-        });
-        const dialogue = await response.text();
-        this.dialogue = dialogue;
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
+    // async generateDialogue() {
+    //   try {
+    //     const response = await fetch('/api/openai', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       body: JSON.stringify({ monsterName: this.name }),
+    //     });
+    //     const dialogue = await response.text();
+    //     this.dialogue = dialogue;
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //   }
+    // }
     
   }
 
-  const talkButton = document.getElementById('talk-button');
-const monsterDialogue = document.getElementById('monster-dialogue');
+//   const talkButton = document.getElementById('talk-button');
+// const monsterDialogue = document.getElementById('monster-dialogue');
 
-talkButton.addEventListener('click', async () => {
-  const randomMonster = monsters[Math.floor(Math.random() * monsters.length)];
-  await randomMonster.generateDialogue();
-  monsterDialogue.innerText = `${randomMonster.name}: ${randomMonster.dialogue}`;
-});
+// talkButton.addEventListener('click', async () => {
+//   const randomMonster = monsters[Math.floor(Math.random() * monsters.length)];
+//   await randomMonster.generateDialogue();
+//   monsterDialogue.innerText = `${randomMonster.name}: ${randomMonster.dialogue}`;
+// });
+
+class NPC {
+  constructor(name, monsterName, bountyValue) {
+    this.name = name;
+    this.monsterName = monsterName;
+    this.bountyValue = bountyValue;
+    this.dialogue = '';
+  }
+
+  // async generateDialogue() {
+  //   try {
+  //     const response = await fetch('/api/openai-npc', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ npcName: this.name, monsterName: this.monsterName }),
+  //     });
+  //     const dialogue = await response.text();
+  //     this.dialogue = dialogue;
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
+
+  // Rest of the NPC class implementation...
+}
 
   const monsters = [
     new Monster("Arktikus", 53, [13, 21], 37),
@@ -90,17 +136,6 @@ talkButton.addEventListener('click', async () => {
     new Monster("Zombie", 95, [4, 14], 12)
     ];
   
-  class Weapon {
-    constructor(name, backgroundStory, attackPointRange) {
-      this.name = name;
-      this.backgroundStory = backgroundStory;
-      this.attackPointRange = attackPointRange;
-    }
-  }
-  
-  
-
-
     const weapons = [
       new Weapon("Fist", "Your own two hands.", [5, 8]),
       new Weapon("Short Sword", "A simple but reliable weapon.", [10, 15]),
@@ -116,32 +151,6 @@ talkButton.addEventListener('click', async () => {
       new Weapon("Staff", "A versatile weapon for blocking and striking.", [8, 15])
     ];
 
-  class NPC {
-    constructor(name, monsterName, bountyValue) {
-      this.name = name;
-      this.monsterName = monsterName;
-      this.bountyValue = bountyValue;
-      this.dialogue = '';
-    }
-  
-    async generateDialogue() {
-      try {
-        const response = await fetch('/api/openai-npc', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ npcName: this.name, monsterName: this.monsterName }),
-        });
-        const dialogue = await response.text();
-        this.dialogue = dialogue;
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
-  
-    // Rest of the NPC class implementation...
-  }
   
   
   // Store 5 different NPCs with API generated data
@@ -215,92 +224,43 @@ talkButton.addEventListener('click', async () => {
     new Place("A dense and tangled thicket of bushes and brambles blocks your way. It looks like it would take some serious effort to push your way through."),
 ]
 
-class Player {
-    constructor(name) {
-      this.name = name;
-      this.hp = 1000;
-      this.gold = 0;
-      this.weapon = new Weapon("Fist", "Your own two hands.", [5, 8]);
-    }
-  
-    // Rest of the Player class implementation...
-  }
-  
- 
-  // ...
-
 function startGame() {
-  // Save the player's name
-  const playerName = document.getElementById("player-name-input").value;
+  // Clear initial-text and input box
+  const initialText = document.getElementById("initial-text");
+  initialText.innerHTML = "";
+  const playerNameInput = document.getElementById("player-name-input");
+
+  // Create a new player and update the stats box
+  const playerName = playerNameInput.value;
   const player = new Player(playerName);
-
-  // Make the stats box appear and update its content
   const statsBox = document.getElementById("stats-box");
-  document.getElementById("player-name").innerText = player.name;
-  document.getElementById("player-hp").innerText = player.hp;
-  document.getElementById("player-weapon").innerText = player.weapon.name;
-  document.getElementById("player-weapon").title = player.weapon.description;
-  document.getElementById("player-gold").innerText = player.gold;
-  statsBox.style.display = "block";
+  statsBox.innerHTML = `
+    <div>Name: ${player.name}</div>
+    <div>HP: ${player.hp}</div>
+    <div>Weapon: <span id="player-weapon" title="${player.weapon.backgroundStory}">${player.weapon.name}</span></div>
+    <div>Gold: ${player.gold}</div>
+  `;
+  statsBox.classList.remove("hidden");
 
-  // Clear the initial text
-  document.getElementById("initial-text").style.display = "none";
-  document.getElementById("start-game-container").style.display = "none";
-
-  // Generate 5 random places
-  const placeButtonsContainer = document.getElementById("place-buttons-container");
-  placeButtonsContainer.innerHTML = "";
-  for (let i = 0; i < 5; i++) {
-    const placeIndex = Math.floor(Math.random() * places.length);
-    const place = places[placeIndex];
-    const button = document.createElement("button");
-    button.classList.add("place-button");
-    button.innerText = place.description;
-    button.addEventListener("click", () => {
-      visitPlace(player, place);
-    });
-    placeButtonsContainer.appendChild(button);
-  }
-}
-
-// ...
-
-function visitPlace(player, place) {
-  // Store either a NPC or a monster in each place
-  if (Math.random() > 0.5) {
-    place.monster = generateRandomMonster();
-  } else {
-    place.npc = generateRandomNPC();
-  }
-
-  // ...
-  // Code for the place exploration, monster fighting, or NPC interaction
-
-  // When player defeats the monster or clicks "exit" button in NPC place
-  const exitButton = document.createElement("button");
-  exitButton.innerText = "Exit";
-  exitButton.addEventListener("click", () => {
-    // Clear the exploration content and display 5 new random places
-    placeButtonsContainer.innerHTML = "";
-    for (let i = 0; i < 5; i++) {
-      const placeIndex = Math.floor(Math.random() * places.length);
-      const place = places[placeIndex];
-      const button = document.createElement("button");
-      button.classList.add("place-button");
-      button.innerText = place.description;
-      button.addEventListener("click", () => {
-        visitPlace(player, place);
-      });
-      placeButtonsContainer.appendChild(button);
-    }
+  // Add hover event listener for displaying the weapon description
+  const playerWeapon = document.getElementById("player-weapon");
+  playerWeapon.addEventListener("mouseover", () => {
+    playerWeapon.setAttribute("title", player.weapon.backgroundStory);
   });
-  placeButtonsContainer.appendChild(exitButton);
+
+  // Hide the start-game-container
+  const startGameContainer = document.getElementById("start-game-container");
+  startGameContainer.classList.add("hidden");
+
+  // Clear the player name input value
+  playerNameInput.value = "";
 }
 
-// Add generateRandomMonster() and generateRandomNPC() functions to randomly create monsters and NPCs
-// ...
-
-document.getElementById("start-game-button").addEventListener("click", startGame);
+  
+document.addEventListener("DOMContentLoaded", () => {
+  const startGameButton = document.getElementById("start-game-button");
+  startGameButton.addEventListener("click", startGame);
+});
 
 
   
