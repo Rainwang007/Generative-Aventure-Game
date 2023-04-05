@@ -239,8 +239,10 @@ function generatePlacesButtons() {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
   placeButtonsContainer.innerHTML = "";
 
+  // Check if there are not enough places left
   if (remainingPlaces.length < 5) {
-    remainingPlaces = [...places]; // Reset the remaining places if there are not enough places left
+    win(); // Call the win() function
+    return; // Exit the function early
   }
 
   const uniquePlaces = [];
@@ -427,7 +429,8 @@ function meetNPC(place) {
   const leaveButton = document.createElement("button");
   leaveButton.innerText = "Leave";
   leaveButton.addEventListener("click", () => {
-    // Add the logic for leaving the NPC place here
+    generatePlacesButtons()
+
   });
   placeButtonsContainer.appendChild(leaveButton);
 }
@@ -448,8 +451,6 @@ function heal() {
   // Set the Gold value in the stats box to 0
   goldDiv.innerText = "Gold: 0";
 }
-
-
 
 
 function meetMonster(place) {
@@ -592,6 +593,30 @@ function monsterPlaceClear(place) {
   // Append the button to the place-buttons-container
  
   placeButtonsContainer.appendChild(meetNPCButton);
+
+  // Check if there are no more remaining places
+  if (remainingPlaces.length === 0) {
+    win();
+  }
+}
+
+function win() {
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+  placeButtonsContainer.innerHTML = "";
+
+  // Display big text "YOU WIN!"
+  const winText = document.createElement("h1");
+  winText.innerText = "YOU WIN!";
+  placeButtonsContainer.appendChild(winText);
+
+  // Create and display the "Restart" button
+  const restartButton = document.createElement("button");
+  restartButton.innerText = "Restart";
+  restartButton.addEventListener("click", () => {
+    location.reload(); // Reset everything by reloading the page
+  });
+  placeButtonsContainer.appendChild(restartButton);
+
 }
 
 
