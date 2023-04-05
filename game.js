@@ -4,6 +4,7 @@ class Player {
     this.hp = 1000;
     this.gold = 0;
     this.weapon = new Weapon("Fist", "Your own two hands.", [5, 8]);
+    this.inventory = []; //
   }
 
   // Rest of the Player class implementation...
@@ -279,13 +280,31 @@ function startGame() {
   const playerName = playerNameInput.value;
   player = new Player(playerName); // Assign the player variable
     const statsBox = document.getElementById("stats-box");
-  statsBox.innerHTML = `
+    statsBox.innerHTML = `
   <div>Name: ${player.name}</div>
-    <div id="player-hp">HP: ${player.hp}</div>
-    <div>Weapon: <span id="player-weapon" title="${player.weapon.backgroundStory}">${player.weapon.name}</span></div>
-    <div>Gold: ${player.gold}</div>
-  `;
+  <div id="player-hp">HP: ${player.hp}</div>
+  <div>
+    <button id="weapons-button">Weapons</button>
+    <span>: <span id="player-weapon">${player.weapon.name}</span></span>
+  </div>
+  <div>Gold: ${player.gold}</div>
+`;
+
   statsBox.classList.remove("hidden");
+  const weaponsBox = document.createElement("div");
+  weaponsBox.id = "weapons-box";
+  weaponsBox.classList.add("hidden");
+  statsBox.appendChild(weaponsBox);
+  
+
+  // a function to update the weapons box content:
+  const weaponsButton = document.getElementById("weapons-button");
+  weaponsButton.addEventListener("click", () => {
+    const weaponsBox = document.getElementById("weapons-box");
+    weaponsBox.classList.toggle("hidden");
+  });
+  
+  
 
   // Add hover event listener for displaying the weapon description
   const playerWeapon = document.getElementById("player-weapon");
@@ -298,7 +317,7 @@ function startGame() {
   startGameContainer.classList.add("hidden");
 
   // Clear the player name input value
-  playerNameInput.value = "";
+ playerNameInput.value = "";
 
    // Show the Start Journey button
    const startJourneyContainer = document.getElementById("start-journey-container");
@@ -469,6 +488,7 @@ function meetMonster(place) {
   const attackButton = document.createElement("button");
   attackButton.innerText = "Attack";
   attackButton.addEventListener("click", () => {
+    attackButton.remove(); 
     fight(player, place);
   });
   placeButtonsContainer.appendChild(attackButton);
@@ -550,15 +570,26 @@ function monsterPlaceClear(place) {
 
   // Check if the place has a weapon
   if (place.weapon) {
-    // Call switchWeapon() function to switch the player's weapon
-    switchWeapon(player, place.weapon);
+    player.inventory.push(place.weapon); // Add this line
 
-    // Update the Weapon in the stats box
-    const playerWeapon = document.getElementById("player-weapon");
-    playerWeapon.innerText = player.weapon.name;
-    playerWeapon.setAttribute("title", player.weapon.backgroundStory);
+    // Update the weapons box content
+    updateWeaponsBox();
   }
 
+  function updateWeaponsBox() {
+    const weaponsBox = document.getElementById("weapons-box");
+    weaponsBox.innerHTML = "";
+    
+    player.inventory.forEach((weapon, index) => {
+      const weaponButton = document.createElement("button");
+      weaponButton.innerText = weapon.name;
+      weaponButton.addEventListener("click", () => {
+        switchWeapon(player, weapon);
+      });
+      weaponsBox.appendChild(weaponButton);
+    });
+  }
+  
   // Create an "Adventure Continues" button
   const adventureContinuesButton = document.createElement("button");
   adventureContinuesButton.innerText = "Adventure Continues";
@@ -621,6 +652,16 @@ function win() {
 
 
 function switchWeapon(player, newWeapon) {
-  // Set the player's weapon to the new weapon found
+  // Update the player's weapon
   player.weapon = newWeapon;
+
+  // Update the Weapon in the stats box
+  const playerWeapon = document.getElementById("player-weapon");
+  playerWeapon.innerText = newWeapon.name;
+  playerWeapon.setAttribute("title", newWeapon.backgroundStory);
+
+  // Hide the weapons box
+  const weaponsBox = document.getElementById("weapons-box");
+  weaponsBox.classList.toggle("hidden"); // Add this line
 }
+
