@@ -224,16 +224,31 @@ class NPC {
     new Place("You stand at the entrance to a dark, ominous cave. Its mouth yawns wide, beckoning you inside."),
     new Place("A shimmering, crystalline lake lies before you, its waters still and clear as glass. You can see fish swimming lazily beneath the surface, and birds flitting about in the trees that surround it."),
     new Place("A dense and tangled thicket of bushes and brambles blocks your way. It looks like it would take some serious effort to push your way through."),
-]
+    new Place("You find yourself at the edge of a tranquil marsh, with towering cattails swaying gently in the breeze and the croaking of frogs echoing through the air."),
+    new Place("You reach a mysterious circle of ancient standing stones, their weathered surfaces etched with runes and symbols. The atmosphere is heavy with the weight of ages."),
+    new Place("A lush oasis appears before you, nestled within the barren desert landscape. The shade of palm trees and the sound of a trickling spring provide a welcome respite."),
+    new Place("You enter an eerily quiet ghost town, with boarded-up buildings and empty streets. The wind whistles through the abandoned structures, and you wonder what happened here."),
+    new Place("A massive, intricately carved temple looms before you, shrouded in vines and moss. The air is thick with the scent of incense, and you can hear the distant sound of chanting."),
+  ];
 
+
+
+let remainingPlaces = [...places]; // Create a copy of the places array
 
 function generatePlacesButtons() {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
   placeButtonsContainer.innerHTML = "";
 
-  const uniquePlaces = new Set();
-  while (uniquePlaces.size < 5) {
-    uniquePlaces.add(places[Math.floor(Math.random() * places.length)]);
+  if (remainingPlaces.length < 5) {
+    remainingPlaces = [...places]; // Reset the remaining places if there are not enough places left
+  }
+
+  const uniquePlaces = [];
+
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * remainingPlaces.length);
+    uniquePlaces.push(remainingPlaces[randomIndex]);
+    remainingPlaces.splice(randomIndex, 1); // Remove the selected place from the remaining places
   }
 
   uniquePlaces.forEach((place) => {
@@ -246,6 +261,8 @@ function generatePlacesButtons() {
     placeButtonsContainer.appendChild(button);
   });
 }
+
+
 // Place visits
 
 
@@ -346,12 +363,23 @@ function distributeEntities() {
   });
 
   // Assign each weapon to a place
-  weapons.forEach((weapon, index) => {
-    const placeIndex = availablePlaces[index + monsters.length + NPCs.length];
-    if (places[placeIndex]) {
-      places[placeIndex].weapon = weapon;
+  weapons.forEach((weapon) => {
+    const randomPlaceIndex = Math.floor(Math.random() * places.length);
+    if (places[randomPlaceIndex].weapon) {
+      // If the place already has a weapon, find another place
+      for (const place of places) {
+        if (!place.weapon) {
+          place.weapon = weapon;
+          break;
+        }
+      }
+    } else {
+      places[randomPlaceIndex].weapon = weapon;
     }
   });
+
+  places.sort(() => Math.random() - 0.5);
+  // shuffle places
 }
 
 
@@ -360,6 +388,14 @@ distributeEntities();
 
 function meetNPC(place) {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
+
+  // Clear all existing contents, but the stats box and the title
+  placeButtonsContainer.innerHTML = "";
+
+  // Display the place description and the NPC's name
+  const placeDescription = document.createElement("p");
+  placeDescription.innerText = `${place.description} Here you meet ${place.npc.name}.`;
+  placeButtonsContainer.appendChild(placeDescription);
 
   // Display the NPC's dialogue
   const npcDialogue = document.createElement("p");
@@ -379,6 +415,14 @@ function meetNPC(place) {
   });
   placeButtonsContainer.appendChild(chatButton);
 
+   // Add a "Pay to heal" button
+   const healButton = document.createElement("button");
+   healButton.innerText = "Pay to heal";
+   healButton.addEventListener("click", () => {
+     heal();
+   });
+   placeButtonsContainer.appendChild(healButton);
+ 
   // Display the "Leave" button
   const leaveButton = document.createElement("button");
   leaveButton.innerText = "Leave";
@@ -389,6 +433,21 @@ function meetNPC(place) {
 }
 
 
+function heal() {
+  const goldDiv = document.querySelector("#stats-box div:nth-child(4)");
+  const currentGold = parseInt(goldDiv.innerText.match(/\d+/)[0]);
+  const exchangeRate = Math.random() * (2 - 0.5) + 0.5;
+
+  const hpDiv = document.getElementById("player-hp");
+  const currentHp = parseInt(hpDiv.innerText.match(/\d+/)[0]);
+  const healedHp = Math.floor(currentGold * exchangeRate);
+
+  // Update HP in the stats box
+  hpDiv.innerText = `HP: ${currentHp + healedHp}`;
+
+  // Set the Gold value in the stats box to 0
+  goldDiv.innerText = "Gold: 0";
+}
 
 
 
@@ -442,18 +501,101 @@ defender.hp -= attackPoints;
     [attacker, defender] = [defender, attacker];
 
     // Add a delay between each turn
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 10));
   }
 
   // Display the fight outcome
   if (player.hp <= 0) {
     fightInfoContainer.appendChild(document.createTextNode("Player has been defeated."));
+    gameOver(); // Call the gameOver() function
+    return;
   } else {
     fightInfoContainer.appendChild(document.createTextNode("Monster has been defeated."));
+    monsterPlaceClear(place); // Call the monsterPlaceClear() function
   }
 
   // Update player's remaining HP in the stats box
   const playerHP = document.getElementById("player-hp");
   playerHP.innerText = player.hp;
 }
+}
+
+
+function gameOver() {
+  // Clear everything on the page
+  document.body.innerHTML = "";
+
+  // Display "GAME OVER"
+  const gameOverText = document.createElement("h1");
+  gameOverText.innerText = "GAME OVER";
+  document.body.appendChild(gameOverText);
+
+  // Create and display the "Restart" button
+  const restartButton = document.createElement("button");
+  restartButton.innerText = "Restart";
+  restartButton.addEventListener("click", () => {
+    location.reload(); // Reset everything by reloading the page
+  });
+  document.body.appendChild(restartButton);
+}
+
+function monsterPlaceClear(place) {
+  // Add the monster's goldDrop to the player's gold
+  player.gold += place.monster.goldDrop;
+
+  // Update the Gold in the stats box
+  const goldDiv = document.querySelector("#stats-box div:nth-child(4)");
+  goldDiv.innerText = `Gold: ${player.gold}`;
+
+  // Check if the place has a weapon
+  if (place.weapon) {
+    // Call switchWeapon() function to switch the player's weapon
+    switchWeapon(player, place.weapon);
+
+    // Update the Weapon in the stats box
+    const playerWeapon = document.getElementById("player-weapon");
+    playerWeapon.innerText = player.weapon.name;
+    playerWeapon.setAttribute("title", player.weapon.backgroundStory);
+  }
+
+  // Create an "Adventure Continues" button
+  const adventureContinuesButton = document.createElement("button");
+  adventureContinuesButton.innerText = "Adventure Continues";
+  adventureContinuesButton.classList.add("adventure-continues-button");
+
+  // Add an event listener to the button
+  adventureContinuesButton.addEventListener("click", () => {
+    generatePlacesButtons();
+  });
+
+  // Append the button to the place-buttons-container
+  const placeButtonsContainer = document.getElementById("place-buttons-container");
+  placeButtonsContainer.appendChild(adventureContinuesButton);
+
+  const meetNPCButton = document.createElement("button");
+  meetNPCButton.innerText = "Meet NPC";
+  meetNPCButton.classList.add("meet-npc-button");
+
+  // Add an event listener to the button
+  meetNPCButton.addEventListener("click", () => {
+    // Assuming you have a pre-stored NPC place, for example, the first place with an NPC
+    const npcPlace = places.find(place => place.npc !== null);
+
+    if (npcPlace) {
+      meetNPC(npcPlace);
+    } else {
+      // You can display an error message or handle this case differently
+      console.log("No NPC places available.");
+    }
+  });
+
+  // Append the button to the place-buttons-container
+ 
+  placeButtonsContainer.appendChild(meetNPCButton);
+}
+
+
+function switchWeapon(player, newWeapon) {
+  // Set the player's weapon to the new weapon found
+  player.weapon = newWeapon;
 }
