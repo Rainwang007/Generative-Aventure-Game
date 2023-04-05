@@ -4,7 +4,7 @@ class Player {
     this.hp = 1000;
     this.gold = 0;
     this.weapon = new Weapon("Fist", "Your own two hands.", [5, 8]);
-    this.inventory = []; //
+    this.inventory = [new Weapon("Fist", "Your own two hands.", [5, 8])]; //
   }
 
   // Rest of the Player class implementation...
@@ -574,6 +574,8 @@ function monsterPlaceClear(place) {
 
     // Update the weapons box content
     updateWeaponsBox();
+     // Show the message box with the weapon's name
+  showMessage(`You have obtained ${place.weapon.name}!`);
   }
 
   function updateWeaponsBox() {
@@ -665,3 +667,21 @@ function switchWeapon(player, newWeapon) {
   weaponsBox.classList.toggle("hidden"); // Add this line
 }
 
+function showMessage(message) {
+  const messageBox = document.createElement("div");
+  messageBox.setAttribute("id", "message-box");
+  messageBox.classList.add("message-box");
+
+  const messageText = document.createElement("p");
+  messageText.innerText = message;
+  messageBox.appendChild(messageText);
+
+  const closeButton = document.createElement("button");
+  closeButton.innerText = "Great";
+  closeButton.addEventListener("click", () => {
+    messageBox.remove();
+  });
+  messageBox.appendChild(closeButton);
+
+  document.body.appendChild(messageBox);
+}
