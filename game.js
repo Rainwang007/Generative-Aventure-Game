@@ -287,7 +287,7 @@ function startGame() {
     <button id="weapons-button">Weapons</button>
     <span>: <span id="player-weapon">${player.weapon.name}</span></span>
   </div>
-  <div>Gold: ${player.gold}</div>
+  <div id="player-gold">Gold: ${player.gold}</div>
 `;
 
   statsBox.classList.remove("hidden");
@@ -415,7 +415,7 @@ function meetNPC(place) {
 
   // Display the place description and the NPC's name
   const placeDescription = document.createElement("p");
-  placeDescription.innerText = `${place.description} Here you meet ${place.npc.name}.`;
+  placeDescription.innerText = `${place.description} Here you meet a person, ${place.npc.name}.`;
   placeButtonsContainer.appendChild(placeDescription);
 
   // Display the NPC's dialogue
@@ -465,9 +465,11 @@ function heal() {
   const healedHp = Math.floor(currentGold * exchangeRate);
 
   // Update HP in the stats box
+  player.hp=currentHp + healedHp;
   hpDiv.innerText = `HP: ${currentHp + healedHp}`;
 
-  // Set the Gold value in the stats box to 0
+  // Set the Gold value in the player object and the stats box to 0
+  player.gold = 0;
   goldDiv.innerText = "Gold: 0";
 }
 
