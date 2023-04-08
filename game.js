@@ -65,12 +65,16 @@ class Monster {
 // });
 
 class NPC {
-  constructor(name, monsterName, bountyValue) {
+  constructor(name, monster, bountyValue) {
     this.name = name;
-    this.monsterName = monsterName;
+    this.monster = monster;
     this.bountyValue = bountyValue;
     this.dialogue = '';
   }
+
+  // Rest of the NPC class implementation...
+
+
 
   // async generateDialogue() {
   //   try {
@@ -162,15 +166,20 @@ class NPC {
     ];
 
   
-  
+ 
+  function getRandomMonster() {
+    return monsters[Math.floor(Math.random() * monsters.length)];
+  }
+   
   // Store 5 different NPCs with API generated data
   const NPCs = [
-    new NPC("Elias", "Elias was once a brave adventurer like you, but was defeated by the fearsome dragon Gorgath. He offers a bounty for Gorgath's head.", 500),
-    new NPC("Cynthia", "Cynthia's village has been terrorized by the giant spider Arachne for too long. She seeks a hero to slay the beast and restore peace to her home.", 300),
-    new NPC("Thorn", "Thorn is a skilled thief and assassin who has been hired by a group of merchants to eliminate the bandit leader Rurik. He offers a share of the loot as a reward.", 800),
-    new NPC("Adira", "Adira is a powerful mage seeking rare and exotic ingredients for a potion that will grant her eternal youth. She offers a bounty for any that can bring her the necessary ingredients.", 1000),
-    new NPC("Drogath", "Drogath is an orc warlord who seeks to expand his territory. He offers a bounty for the heads of the leaders of neighboring kingdoms.", 1500)
+    new NPC("Elias", getRandomMonster(), 500),
+    new NPC("Cynthia", getRandomMonster(), 300),
+    new NPC("Thorn", getRandomMonster(), 800),
+    new NPC("Adira", getRandomMonster(), 1000),
+    new NPC("Drogath", getRandomMonster(), 1500)
   ];
+  
 
 
   
@@ -614,16 +623,20 @@ function monsterPlaceClear(place) {
 
   // Add an event listener to the button
   meetNPCButton.addEventListener("click", () => {
-    // Assuming you have a pre-stored NPC place, for example, the first place with an NPC
-    const npcPlace = places.find(place => place.npc !== null);
+     // Find an NPC place from the remaining places
+  const npcPlaceIndex = remainingPlaces.findIndex(place => place.npc !== null);
 
-    if (npcPlace) {
-      meetNPC(npcPlace);
-    } else {
-      // You can display an error message or handle this case differently
-      console.log("No NPC places available.");
-    }
-  });
+  if (npcPlaceIndex !== -1) {
+    const npcPlace = remainingPlaces[npcPlaceIndex];
+    meetNPC(npcPlace);
+
+    // Remove the visited NPC place from the remaining places
+    remainingPlaces.splice(npcPlaceIndex, 1);
+  } else {
+    // Show the message when there are no more NPC places
+    showMessage("There is no other people can help you");
+  }
+});
 
   // Append the button to the place-buttons-container
  
