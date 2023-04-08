@@ -44,8 +44,8 @@ app.post('/api/openai', async (req, res) => {
 });
 
 app.post('/api/openai-npc', async (req, res) => {
-  const { npcName, monster } = req.body;
-  const prompt = `Generate dialogue for an NPC named ${npcName} who tells the story about a monster named ${monster.name}. The NPC offers a bounty to the player if they can kill the monster. The bounty value is: ${npc.bountyValue}.`;
+  const { npcName, monster, userMessage } = req.body;
+  const prompt = `Generate dialogue for an NPC named ${npcName} who tells the story about a monster named ${monster.name}. The NPC offers a bounty to the player if they can kill the monster. The bounty value is: ${monster.bountyValue}.`;
 
   try {
     const completion = await openai.createChatCompletion({
@@ -59,11 +59,18 @@ app.post('/api/openai-npc', async (req, res) => {
           role: "user",
           content: prompt,
         },
+        {
+          role: "user",
+          content: userMessage,
+        },
       ],
     });
 
+  
     const chatMessage = completion.data.choices[0].message.content.trim();
     res.send(chatMessage);
+
+
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
     res.status(500).send('Error generating text');
