@@ -310,9 +310,23 @@ function startGame() {
   const weaponsButton = document.getElementById("weapons-button");
   weaponsButton.addEventListener("click", () => {
     const weaponsBox = document.getElementById("weapons-box");
-    weaponsBox.classList.toggle("hidden");
+    if (weaponsBox.children.length === 0) {
+      const messageBox = document.createElement("div");
+      messageBox.classList.add("message-box");
+      const message = document.createElement("p");
+      message.textContent = "You have no weapons yet!";
+      const closeButton = document.createElement("button");
+      closeButton.textContent = "Alright";
+      closeButton.addEventListener("click", () => {
+        messageBox.remove();
+      });
+      messageBox.appendChild(message);
+      messageBox.appendChild(closeButton);
+      weaponsBox.appendChild(messageBox);
+    } else {
+      weaponsBox.classList.toggle("hidden");
+    }
   });
-  
   
 
   // Add hover event listener for displaying the weapon description
@@ -523,9 +537,9 @@ function meetMonster(place) {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
 
   // Display the monster's dialogue and HP
-  const monsterDialogue = document.createElement("p");
-  monsterDialogue.innerText = `Monster Dialogue: ${place.monster.dialogue}`;
-  placeButtonsContainer.appendChild(monsterDialogue);
+  // const monsterDialogue = document.createElement("p");
+  // monsterDialogue.innerText = `Monster Dialogue: ${place.monster.dialogue}`;
+  // placeButtonsContainer.appendChild(monsterDialogue);
 
   const monsterHP = document.createElement("p");
   monsterHP.innerText = `Monster HP: ${place.monster.hp}`;
@@ -544,7 +558,7 @@ function meetMonster(place) {
   const fightInfoContainer = document.createElement("div");
   fightInfoContainer.setAttribute("id", "fight-info-container");
   placeButtonsContainer.appendChild(fightInfoContainer);
-
+  fightInfoContainer.scrollTop = fightInfoContainer.scrollHeight;
 
 
 async function fight(player, place) {
@@ -584,7 +598,7 @@ defender.hp -= attackPoints;
 
   // Update player's remaining HP in the stats box
   const playerHP = document.getElementById("player-hp");
-  playerHP.innerText = player.hp;
+  playerHP.innerText = `HP:${player.hp}`;
 }
 }
 
