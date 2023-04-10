@@ -1,4 +1,4 @@
-Dungeon Adventure Game
+**Dungeon Adventure Game**
 Dungeon Adventure Game is a simple text-based adventure game where players can explore different places, fight monsters, and interact with non-playable characters (NPCs) to complete quests. The game features a dungeon and dragons-inspired theme with a gold-brown color scheme.
 
 Live Demo
