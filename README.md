@@ -32,19 +32,19 @@ The source code is available on GitHub: [https://github.com/Rainwang007/Rainwang
 
 1. Clone the repository
 
-git clone https://github.com/Rainwang007/Rainwang007.github.io.git
+git clone `https://github.com/Rainwang007/Rainwang007.github.io.git`
 
 2. Navigate to the project directory
 
-cd Rainwang007.github.io
+`cd Rainwang007.github.io`
 
 3. Install dependencies
 
-npm install
+`npm install`
 
 4. Run the server
 
-npm start
+`npm start`
 
 5. Open your browser and visit [http://localhost:3000](http://localhost:3000)
 
@@ -61,6 +61,3 @@ npm start
 
 **Rainwang007** - [GitHub](https://github.com/Rainwang007)
 =======
-# Rainwang007.github.io
-GA Project 1
->>>>>>> 1fa94907615846a342f173925dbdad18738de655
