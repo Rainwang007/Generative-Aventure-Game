@@ -1,5 +1,5 @@
-Generative Adventure
-Generative Adventure is a simple text-based adventure game where players can explore different places, fight monsters, and interact with non-playable characters (NPCs) to complete quests. The game features a dungeon and dragons-inspired theme with a gold-brown color scheme.
+Dungeon Adventure Game
+Dungeon Adventure Game is a simple text-based adventure game where players can explore different places, fight monsters, and interact with non-playable characters (NPCs) to complete quests. The game features a dungeon and dragons-inspired theme with a gold-brown color scheme.
 
 Live Demo
 You can try out the live demo of the game at the following link:
@@ -39,5 +39,3 @@ The game lacks a proper story and progression system. Implementing a more cohere
 Players can only chat with NPCs using a basic input box. A more advanced conversation system could be implemented to create meaningful interactions with NPCs.
 The game can be expanded with a more complex combat system, including skills, abilities, and equipment.
 Implementing a save/load feature would allow players to return to their game at a later time.
-License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
