@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Generative Adventure
 
 Generative Adventure is an interactive text-based adventure game powered by GPT-3. The game generates unique dialogues, locations, and encounters, providing a new experience every time you play.
@@ -55,3 +56,7 @@ npm start
 ## :busts_in_silhouette: Author
 
 **Rainwang007** - [GitHub](https://github.com/Rainwang007)
+=======
+# Rainwang007.github.io
+GA Project 1
+>>>>>>> 1fa94907615846a342f173925dbdad18738de655
