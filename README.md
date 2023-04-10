@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Generative Adventure
 
 Generative Adventure is an interactive text-based adventure game powered by GPT-3. The game generates unique dialogues, locations, and encounters, providing a new experience every time you play.
