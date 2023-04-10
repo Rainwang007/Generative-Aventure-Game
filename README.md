@@ -31,15 +31,19 @@ The source code is available on GitHub: [https://github.com/Rainwang007/Rainwang
 ## :clipboard: Installation Instructions
 
 1. Clone the repository
+
 git clone https://github.com/Rainwang007/Rainwang007.github.io.git
 
 2. Navigate to the project directory
+
 cd Rainwang007.github.io
 
 3. Install dependencies
+
 npm install
 
 4. Run the server
+
 npm start
 
 5. Open your browser and visit [http://localhost:3000](http://localhost:3000)
