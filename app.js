@@ -44,32 +44,33 @@ const openai = new OpenAIApi(configuration);
 // });
 
 app.post('/api/openai-npc', async (req, res) => {
-  const { npcName, userMessage } = req.body;
-  const prompt = `You play the role as an NPC named ${npcName}. You admire the player's courage as an adventurer. You will respond to ${userMessage} as the NPC.`;
-
-  try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-     
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
-
+  const { npcName, monster, userMessage } = req.body;
   
-    const chatMessage = completion.data.choices[0].message.content.trim();
-    res.send(chatMessage);
+  if (userMessage) {
+    const prompt = `You play the role as an NPC named ${npcName}. Your enemy is ${monster}. You admire the player's courage as an adventurer. You will respond to ${userMessage} as the NPC.`;
 
+    try {
+      const completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
 
-  } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-    res.status(500).send('Error generating text');
+      const chatMessage = completion.data.choices[0].message.content.trim();
+      res.send(chatMessage);
+
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      res.status(500).send('Error generating text');
+    }
+  } else {
+    res.send('');
   }
 });
-
 
 
 const port = process.env.PORT || 3000;

@@ -452,7 +452,8 @@ function meetNPC(place) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ npcName: npc.name, monster: npc.monster }),
+        body: JSON.stringify({ npcName: place.npc.name, userMessage, monster: place.npc.monster }),
+
       });
       const dialogue = await response.text();
       npc.dialogue = dialogue;
@@ -461,8 +462,6 @@ function meetNPC(place) {
       console.error('Error:', error);
     }
   }
-
-  placeButtonsContainer.appendChild(npcDialogue);
 
 
   // Display the input box and "Chat" button
@@ -473,6 +472,7 @@ function meetNPC(place) {
 
   const chatButton = document.createElement("button");
   chatButton.innerText = "Chat";
+
 
 
   chatButton.addEventListener("click", async () => {
@@ -493,9 +493,9 @@ function meetNPC(place) {
       }
     }
   });
-  
-  
+
   placeButtonsContainer.appendChild(chatButton);
+  placeButtonsContainer.appendChild(npcDialogue);
 
    // Add a "Pay to heal" button
    const healButton = document.createElement("button");
