@@ -44,8 +44,8 @@ const openai = new OpenAIApi(configuration);
 // });
 
 app.post('/api/openai-npc', async (req, res) => {
-  const { npcName, monster, userMessage } = req.body;
-  const prompt = `You play the role as an NPC named ${npcName} who tells the story about a monster named ${monster.name}. You will respond to ${userMessage} as the NPC.`;
+  const { npcName, userMessage } = req.body;
+  const prompt = `You play the role as an NPC named ${npcName}. You admire the player's courage as an adventurer. You will respond to ${userMessage} as the NPC.`;
 
   try {
     const completion = await openai.createChatCompletion({
@@ -54,7 +54,7 @@ app.post('/api/openai-npc', async (req, res) => {
      
         {
           role: "user",
-          content: userMessage,
+          content: prompt,
         },
       ],
     });

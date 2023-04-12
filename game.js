@@ -484,7 +484,7 @@ function meetNPC(place) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ npcName: place.npc.name, monster: place.monster.name, userMessage }),
+          body: JSON.stringify({ npcName: place.npc.name, userMessage }),
         });
         const dialogue = await response.text();
         npcDialogue.innerText += `\nPlayer: ${userMessage}\nNPC: ${dialogue}`;
