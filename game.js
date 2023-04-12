@@ -3,8 +3,8 @@ class Player {
     this.name = name;
     this.hp = 1000;
     this.gold = 0;
-    this.weapon = new Weapon("Fist", "Your own two hands.", [5, 8]);
-    this.inventory = [new Weapon("Fist", "Your own two hands.", [5, 8])]; //
+    this.weapon = weapons[0];
+    this.inventory = [weapons[0]]; //
   }
 
   // Rest of the Player class implementation...
@@ -366,6 +366,7 @@ function visitPlace(place) {
     meetNPC(place);
   }
 }
+//visit place 
 
 document.addEventListener("DOMContentLoaded", () => {
   const startGameButton = document.getElementById("start-game-button");
@@ -382,6 +383,7 @@ startJourneyButton.addEventListener("click", () => {
   // Generate place buttons
   generatePlacesButtons();
 });
+
 
 function distributeEntities() {
   // Create a temporary array containing indices of all places
@@ -438,7 +440,7 @@ function meetNPC(place) {
 
   // Display the place description and the NPC's name
   const placeDescription = document.createElement("p");
-  placeDescription.innerText = `${place.description} Here you meet a person, ${place.npc.name}.`;
+  placeDescription.innerText = `${place.description} Here you meet a friendly person, ${place.npc.name}.`;
   placeButtonsContainer.appendChild(placeDescription);
 
   // Display the NPC's dialogue
@@ -482,7 +484,7 @@ function meetNPC(place) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ npcName: place.npc.name, monster: place.npc.monster, userMessage }),
+          body: JSON.stringify({ npcName: place.npc.name, monster: place.monster.name, userMessage }),
         });
         const dialogue = await response.text();
         npcDialogue.innerText += `\nPlayer: ${userMessage}\nNPC: ${dialogue}`;
