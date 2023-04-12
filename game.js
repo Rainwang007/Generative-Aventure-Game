@@ -431,7 +431,6 @@ function distributeEntities() {
 
 // Call the distributeEntities function after defining the arrays
 distributeEntities();
-
 function meetNPC(place) {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
 
@@ -440,7 +439,7 @@ function meetNPC(place) {
 
   // Display the place description and the NPC's name
   const placeDescription = document.createElement("p");
-  placeDescription.innerText = `${place.description} Here you meet a friendly person, ${place.npc.name}.`;
+  placeDescription.innerText = `${place.description} Here you meet a person, ${place.npc.name}.`;
   placeButtonsContainer.appendChild(placeDescription);
 
   // Display the NPC's dialogue
@@ -452,8 +451,7 @@ function meetNPC(place) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ npcName: place.npc.name, userMessage, monster: place.npc.monster }),
-
+        body: JSON.stringify({ npcName: npc.name, monster: npc.monster }),
       });
       const dialogue = await response.text();
       npc.dialogue = dialogue;
@@ -463,6 +461,12 @@ function meetNPC(place) {
     }
   }
 
+  placeButtonsContainer.appendChild(npcDialogue);
+
+  fetchNPCDialogue(place.npc).then(dialogue => {
+    npcDialogue.innerText = `NPC Dialogue: ${dialogue}`;
+   placeButtonsContainer.appendChild(npcDialogue);
+  });
 
   // Display the input box and "Chat" button
   const chatInput = document.createElement("input");
@@ -473,29 +477,26 @@ function meetNPC(place) {
   const chatButton = document.createElement("button");
   chatButton.innerText = "Chat";
 
-
-
-  chatButton.addEventListener("click", async () => {
-    const userMessage = chatInput.value;
-    if (userMessage) {
-      try {
-        const response = await fetch('/api/openai-npc', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ npcName: place.npc.name, userMessage }),
-        });
-        const dialogue = await response.text();
-        npcDialogue.innerText += `\nPlayer: ${userMessage}\nNPC: ${dialogue}`;
-      } catch (error) {
-        console.error('Error:', error);
-      }
+chatButton.addEventListener("click", async () => {
+  const userMessage = chatInput.value;
+  if (userMessage) {
+    try {
+      const response = await fetch('/api/openai-npc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ npcName: place.npc.name, monster: place.npc.monster }),
+      });
+      const dialogue = await response.text();
+      npcDialogue.innerText += `\nPlayer: ${userMessage}\nNPC: ${dialogue}`;
+    } catch (error) {
+      console.error('Error:', error);
     }
-  });
+  }
+});
 
   placeButtonsContainer.appendChild(chatButton);
-  placeButtonsContainer.appendChild(npcDialogue);
 
    // Add a "Pay to heal" button
    const healButton = document.createElement("button");
@@ -504,7 +505,7 @@ function meetNPC(place) {
      heal();
    });
    placeButtonsContainer.appendChild(healButton);
- 
+
   // Display the "Leave" button
   const leaveButton = document.createElement("button");
   leaveButton.innerText = "Leave";
@@ -514,7 +515,6 @@ function meetNPC(place) {
   });
   placeButtonsContainer.appendChild(leaveButton);
 }
-
 
 function heal() {
   const goldDiv = document.querySelector("#stats-box div:nth-child(4)");
