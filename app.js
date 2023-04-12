@@ -16,45 +16,18 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.post('/api/openai', async (req, res) => {
-  const { monsterName } = req.body;
-  const prompt = `Generate dialogue for a monster named ${monsterName}.`;
 
-  try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful assistant that generates dialogue for monsters.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
 
-    const chatMessage = completion.data.choices[0].message.content.trim();
-    res.send(chatMessage);
-  } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-    res.status(500).send('Error generating text');
-  }
-});
 
 app.post('/api/openai-npc', async (req, res) => {
-  const { npcName, monster } = req.body;
-  const prompt = `Generate dialogue for an NPC named ${npcName} who tells the story about a monster named ${monster.name}. The NPC offers a bounty to the player if they can kill the monster. The bounty value is: ${npc.bountyValue}.`;
+  const { npcName, monster, userMessage } = req.body;
+  const prompt = `You play the role of an NPC named ${npcName}, who's enemy is a monster named ${monster.name}. The player says: "${userMessage}". Respond to the player as the NPC.`;
 
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       messages: [
-        {
-          role: "system",
-          content: "You are a helpful assistant that generates dialogue for NPCs.",
-        },
+   
         {
           role: "user",
           content: prompt,

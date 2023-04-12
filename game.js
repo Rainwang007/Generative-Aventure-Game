@@ -431,6 +431,8 @@ function distributeEntities() {
 
 // Call the distributeEntities function after defining the arrays
 distributeEntities();
+
+
 function meetNPC(place) {
   const placeButtonsContainer = document.getElementById("place-buttons-container");
 
@@ -442,40 +444,18 @@ function meetNPC(place) {
   placeDescription.innerText = `${place.description} Here you meet a person, ${place.npc.name}.`;
   placeButtonsContainer.appendChild(placeDescription);
 
-  // Display the NPC's dialogue
-  const npcDialogue = document.createElement("p");
-  async function fetchNPCDialogue(npc) {
-    try {
-      const response = await fetch('/api/openai-npc', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ npcName: npc.name, monster: npc.monster }),
-      });
-      const dialogue = await response.text();
-      npc.dialogue = dialogue;
-      return dialogue;
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
+  // Create the npcDialogue element without setting its innerText initially
+const npcDialogue = document.createElement("p");
+placeButtonsContainer.appendChild(npcDialogue);
 
-  placeButtonsContainer.appendChild(npcDialogue);
+// Display the input box and "Chat" button
+const chatInput = document.createElement("input");
+chatInput.type = "text";
+chatInput.placeholder = "Type your message here...";
+placeButtonsContainer.appendChild(chatInput);
 
-  fetchNPCDialogue(place.npc).then(dialogue => {
-    npcDialogue.innerText = `NPC Dialogue: ${dialogue}`;
-   placeButtonsContainer.appendChild(npcDialogue);
-  });
-
-  // Display the input box and "Chat" button
-  const chatInput = document.createElement("input");
-  chatInput.type = "text";
-  chatInput.placeholder = "Type your message here...";
-  placeButtonsContainer.appendChild(chatInput);
-
-  const chatButton = document.createElement("button");
-  chatButton.innerText = "Chat";
+const chatButton = document.createElement("button");
+chatButton.innerText = "Chat";
 
 chatButton.addEventListener("click", async () => {
   const userMessage = chatInput.value;
@@ -486,7 +466,7 @@ chatButton.addEventListener("click", async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ npcName: place.npc.name, monster: place.npc.monster }),
+        body: JSON.stringify({ npcName: place.npc.name, monster: place.npc.monster, userMessage }),
       });
       const dialogue = await response.text();
       npcDialogue.innerText += `\nPlayer: ${userMessage}\nNPC: ${dialogue}`;
@@ -496,7 +476,8 @@ chatButton.addEventListener("click", async () => {
   }
 });
 
-  placeButtonsContainer.appendChild(chatButton);
+placeButtonsContainer.appendChild(chatButton);
+
 
    // Add a "Pay to heal" button
    const healButton = document.createElement("button");
