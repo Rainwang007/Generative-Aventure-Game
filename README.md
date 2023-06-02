@@ -22,7 +22,7 @@ The game is designed with a simple user interface, consisting of a game title, s
 
 ## :earth_americas: Live Site
 
-Experience Generative Adventure live: [https://rainsgptgame.herokuapp.com/](https://rainsgptgame.herokuapp.com/)
+Experience Generative Adventure live: [https://generative-aventure-game-pgpdk0k61-rainwang007.vercel.app/][Live Site](https://generative-aventure-game-pgpdk0k61-rainwang007.vercel.app/)
 
 ## :octocat: Repository
 
